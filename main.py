@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 SAMPLE_RATE = 16000
-SPEAKER_CUTOFF = 18
+SPEAKER_CUTOFF = 25
 
 
 ## Aim of this project is to separate out the speech of Lex Fridman and his guest. 
@@ -29,10 +29,12 @@ print(len(audio)/SAMPLE_RATE)
 audio_fragments = np.array_split(audio, number_of_breaks) 
 
 pre_process = []
-for i in range(10, 19):
+for i in range(0,5):
     pre_process.append(preprocess_wav(audio_fragments[i]))
 
-test_embeds = np.array([encoder.embed_utterance(wav) for wav in pre_process]).mean(axis=0)
+lex_embed = np.array([encoder.embed_utterance(wav) for wav in pre_process]).mean(axis=0)
+guest_embed = None 
+
 
 distict_audio_found = False
 index_audio = 0 
@@ -40,21 +42,35 @@ index_audio = 0
 for index, wav in enumerate(audio_fragments):
     embed_mapping = encoder.embed_utterance(wav)
 
-    if(np.dot(embed_mapping,test_embeds)<= 0.65):
+    if(np.dot(embed_mapping,lex_embed)<= 0.80):
         print("dot product is ")
-        print(np.dot(embed_mapping,test_embeds))
+        print(np.dot(embed_mapping,lex_embed))
+        guest_embed = embed_mapping
         distict_audio_found = True
         index_audio = index
         break 
 
-if distict_audio_found:
-    print(index_audio)
-    res = model.transcribe(audio_fragments[index_audio])
-    print(res["text"])
+lex_speech = []
+guest_speech = []
+
+for index,wav in enumerate(audio_fragments[0:100]):
+    wav_embedding = encoder.embed_utterance(wav)
+
+    if(guest_embed is not None):
+        lex_likelyhood = np.dot(wav_embedding, lex_embed)
+        guest_likelyhood = np.dot(wav_embedding, guest_embed)
+        res = model.transcribe(wav)
+
+        if(lex_likelyhood>guest_likelyhood):
+            lex_speech.append(res["text"].strip("."))
+
+        else:
+            guest_speech.append(res["text"].strip("."))
+
+print(lex_speech)
+print(guest_speech)
 
 
-# result = model.transcribe(audio[0: 30*SAMPLE_RATE])
-
-# print(result["text"])
+        
 
 
