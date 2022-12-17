@@ -16,7 +16,7 @@ import json
 
 ## OpenAI secret key is stored inside ../api_key, you would need to create your own API key
 ## and store it. 
-api_path = "../api_key"
+api_path = "/api_key"
 token = ""
 
 ## Openining the file and retriving the key
