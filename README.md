@@ -9,7 +9,7 @@ Before you begin, make sure you have the following tools installed on your machi
 - Python 3.7 or later
 - Resemblyzer
 - whisper AI
-- chat-GPT
+- Cohere API
 
 ### Installation
 
