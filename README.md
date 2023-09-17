@@ -1,4 +1,4 @@
-## SmartSpeak-Podasting using Resemblyzer, Whisper AI, GPT-3 
+## SmartSpeak-Podasting using Resemblyzer, Whisper AI, Cohere
 
 SmartSpeaking-Podcast is a tool that automatically transcribes audio files of podcasts, performs speaker diarization, and generates text based on the conversation between the speakers.
 
